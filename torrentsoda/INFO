@@ -1,0 +1,10 @@
+{
+"name": "torrentsoda",
+"displayname": "Torrent soda",
+"description": "Torrent soda - isul@isulnara.com",
+"version": "1.0",
+"site": "https://torrentsoda.com/",
+"module": "search.php",
+"type": "search",
+"class": "SynoDLMSearchTorrentSoda"
+}
