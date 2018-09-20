@@ -90,12 +90,12 @@ class SynoDLMSearchTorrentSoda
 					$size = floor($size);
 				}				
 				$datetime = date('Y-m-d H:i:s', strtotime("+$count seconds"));
-				$page = "1";
+				$page = $a[0]->href;
 				$hash = md5($title);
 				$seeds = 0;
 				$leechs = 0;
 
-				$this->debug("[" . $category . "] " . $title . " " . $download . " " . $size);				
+				$this->debug("[" . $category . "] " . $title . " " . $download . " " . $size);
 				$plugin->addResult($title, $download, $size, $datetime, $page, $hash, $seeds, $leechs, $category);
 				$count++;
 			}
