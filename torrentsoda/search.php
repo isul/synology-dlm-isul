@@ -28,7 +28,7 @@ include('simple_html_dom.php');
 
 class SynoDLMSearchTorrentSoda
 {
-	private $qurl = "https://torensoda.com/?s=";
+	private $qurl = "https://ttsoda.com/?s=";
 	
 	private $debugEnabled = false;
 
