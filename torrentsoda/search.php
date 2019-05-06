@@ -28,7 +28,7 @@ include('simple_html_dom.php');
 
 class SynoDLMSearchTorrentSoda
 {
-	private $qurl = "https://ttsoda.com/?s=";
+	private $URL_CLOUD = "https://com-isulnara-datastore.appspot.com/data/tsoda/soda/url";
 	
 	private $debugEnabled = false;
 
@@ -40,8 +40,19 @@ class SynoDLMSearchTorrentSoda
 
 	public function prepare($curl, $query)
 	{
-		$url = $this->qurl . urlencode($query);
+		$this->debug("prepare()::query->" . $query);
+		$baseUrl = $this->getBaseUrl();
+		$this->debug("prepare()::baseUrl->" . $baseUrl);
+		if ($baseUrl==null)
+			return "";
+		$url = $baseUrl . "?s=" . urlencode($query);
+		
+		$headers = array(
+							"User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
+							"Accept-Language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6,zh;q=0.5"
+						);
 		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER , true);
 		$response = curl_exec($curl);
 		return $response;
@@ -50,6 +61,7 @@ class SynoDLMSearchTorrentSoda
 	
 	public function parse($plugin, $response)
 	{
+		$this->debug("parse()::response->" . $response);
 		$dom = str_get_html($response);
 		$main = $dom->find('main', 0);
 		$articles = $main->find('article');
@@ -101,6 +113,24 @@ class SynoDLMSearchTorrentSoda
 			}
 		}
 		return $count;
+	}
+	
+	
+	private function getBaseUrl()
+	{
+		$url = null;
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->URL_CLOUD);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$jsonString = curl_exec($ch);
+		$result = json_decode($jsonString);
+		if ($result->success)
+		{
+			$extra = json_decode($result->extra);
+			$url = $extra->dataValue;
+		}
+		curl_close($ch);
+		return $url;
 	}
 	
 	
